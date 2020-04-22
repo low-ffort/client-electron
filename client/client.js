@@ -23,7 +23,7 @@ var randNum = () => {
 	return code;
 };
 var clientId = randNum();
-var socket = io('https://low-ffort-server.glitch.me/?clientId=' + clientId, {});
+var socket = io('http://localhost:3000/?clientId=' + clientId, {});
 
 connServerDiv.innerHTML = "<p>Connecting to server, please wait...</p>";
 var connectUp = setInterval(loadup, 2000);
