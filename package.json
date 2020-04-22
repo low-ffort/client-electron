@@ -1,0 +1,44 @@
+{
+  "name": "low-ffort-client",
+  "version": "1.0.0",
+  "description": "Low Ffort Client",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm install && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/low-ffort/low-ffort-client.git"
+  },
+  "keywords": [
+    "low-ffort",
+    "client",
+    "client-side"
+  ],
+  "author": "Bluntano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/low-ffort/low-ffort-client/issues"
+  },
+  "homepage": "https://github.com/low-ffort/low-ffort-client#readme",
+  "devDependencies": {
+    "electron": "^8.2.3",
+    "electron-builder": "^22.5.1"
+  },
+  "build": {
+    "appId": "lowffort1",
+    "productName": "Low Ffort Client",
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "icon.png"
+    },
+    "portable": {
+      "artifactName": "lowffort_client.exe"
+    }
+  }
+}
