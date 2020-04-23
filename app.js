@@ -3,9 +3,10 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow // so long, gay bowser
 const path = require('path');
 const url = require('url');
+const config = require('./config.json');
 
 let mainWindow;
-let devTools = false;
+let devTools = config.devTools;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -20,11 +21,10 @@ function createWindow() {
     });
 
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'client/index.html'),
+        pathname: path.join(__dirname, 'client/window.html'),
         protocol: 'file:',
         slashes: true
     }));
-    mainWindow.focus();
 
     if (devTools) { mainWindow.webContents.openDevTools() };
 
