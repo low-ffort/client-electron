@@ -21,10 +21,10 @@ label {
     overflow-y:scroll;
 }
 #good {
-    color: greenyellow;
+    color: #0A0;
 }
 #bad {
-    color: red;
+    color: #A00;
 }
 /* DARK MODE */
 @media (prefers-color-scheme: dark) {
@@ -34,5 +34,12 @@ label {
     }
     #ctx {
         border-color: #FFF;
+    }
+    /* better on the eye when dark mode */
+    #good {
+        color: #2F2;
+    }
+    #bad {
+        color: #F55;
     }
 }
