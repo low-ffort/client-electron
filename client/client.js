@@ -11,9 +11,13 @@ var canvas = document.getElementById("ctx");
 var gameLabel = document.getElementById("gameLabel");
 var connServerDiv = document.getElementById("connectServer");
 var ctx = canvas.getContext("2d");
+
+// dark mode checker
 var isDark = () => {
 	return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
+};
+
+// random code generator, for client id
 var randNum = () => {
 	var letters = "0123456789ABCDEF";
 	var code = "";
@@ -23,26 +27,45 @@ var randNum = () => {
 	return code;
 };
 var clientId = randNum();
-var socket = io('http://localhost:3000/?clientId=' + clientId, {});
 
-connServerDiv.innerHTML = "<p>Connecting to server, please wait...</p>";
-var connectUp = setInterval(loadup, 2000);
+// socket connection
+var config = require('../config.json');
+var server = `${config.url}:${config.port}`;
+var socket = io(`${server}/?clientId=${clientId}`);
+
+connServerDiv.innerHTML = `<p>Connecting to ${server}, please wait...</p>`;
+
+var loadingTime = 3500;
+var attempt = 0;
+var connectUp = setInterval(loadup, loadingTime);
 
 function loadup() {
-	let status;
 	if (socket.connected) {
 		connServerDiv.innerHTML = "<p id=\"good\">Connected!</p>"
 		setTimeout(function () {
 			formContainer.style.display = 'inline-block';
 			connServerDiv.style.display = 'none';
-			status = true;
 		}, 1000);
 		clearInterval(connectUp);
 	} else {
-		connServerDiv.innerHTML = "<p id=\"bad\">Failed to connect, reconnecting...</p>";
-		status = false;
+		attempt++;
+		if (attempt > 3) {
+			connServerDiv.innerHTML = `
+			<p id="bad">Failed to make a connection with the socket. Either:</p>
+			<ul id="bad">
+			<li>Socket server's URL/IP or port, set in the configurations, is invalid.</li>
+			<li>Server is down.</li>
+			<li>Firewall is blocking to make connection.</li>
+			<li>No internet connection.</li>
+			</ul>
+			`;
+			return clearInterval(connectUp);
+		};
+		connServerDiv.innerHTML = `<p id="bad">Failed to connect to the socket.</p>`;
+		setTimeout(function() {
+			connServerDiv.innerHTML = `<p>Trying again... [attempt #${attempt}]</p>`;
+		}, 1500);
 	};
-	return status;
 }
 
 // name sing-in and its validation
@@ -66,8 +89,10 @@ socket.on('userValidation', function(data) {
 		gameLabel.style.display = 'none';
 		gameDiv.style.display = 'inline-block';
 	} else {
-		alert('Error: ' + data.reason);
-		return;
+		return new Notification('Error occured', {
+			body: data.reason,
+			icon: '../icon.png'
+		});
 	};
 });
 
